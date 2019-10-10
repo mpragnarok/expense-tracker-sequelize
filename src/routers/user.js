@@ -1,12 +1,13 @@
 const express = require('express')
 const router = express.Router()
 const passport = require('passport')
-const User = require('../models/user')
+const bcrypt = require('bcryptjs')
+const db = require('../../models')
+const User = db.User
 
 // show login page
 router.get('/login', async (req, res) => {
   try {
-
     res.render('login', { message: req.flash('error') })
   } catch (e) {
     res.status(500).send(e)
@@ -22,26 +23,28 @@ router.post('/login', async (req, res, next) => {
       badRequestMessage: 'The email does not match any account',
       failureFlash: true
     })(req, res, next)
-
   } catch (e) {
     res.status(400).send(e)
   }
 })
 // show register page
 router.get('/register', async (req, res) => {
+
   try {
+
     res.render('register')
   } catch (e) {
-    res.status(500).send()
+    res.status(500).send(e)
   }
 })
 
+
 // register authentication
 router.post('/register', async (req, res) => {
+  const { name, email, password, password2 } = req.body
   try {
-    const { name, email, password, password2 } = req.body
-    let errors = []
 
+    let errors = []
     if (!email || !password || !password2) {
       errors.push({ message: 'All fields are required' })
     }
@@ -59,7 +62,7 @@ router.post('/register', async (req, res) => {
         password2
       })
     } else {
-      const user = await User.findOne({ email })
+      const user = await User.findOne({ where: { email } })
       // user already exists 
       if (user) {
         errors.push({ message: 'This Email is already registered' })
@@ -71,18 +74,21 @@ router.post('/register', async (req, res) => {
           password2
         })
       } else {
+        const hash = await bcrypt.hash(password, 8)
         // Add new user if user not exists
-        const newUser = new User({
-          name,
-          email,
-          password
-        })
+        const newUser =
+          await User.create({
+            name,
+            email,
+            password: hash
+          })
         await newUser.save()
         res.redirect('/')
       }
     }
+
   } catch (e) {
-    res.status(400).send()
+    res.status(400).send(e)
   }
 })
 
@@ -96,11 +102,5 @@ router.get('/logout', async (req, res) => {
     res.status(500).send()
   }
 })
-
-
-
-
-
-
 
 module.exports = router

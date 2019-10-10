@@ -23,25 +23,7 @@ module.exports = {
       date: {
         type: Sequelize.DATE
       },
-      month: {
-        type: Sequelize.STRING
-      },
-      year: {
-        type: Sequelize.STRING
-      },
-      day: {
-        type: Sequelize.STRING
-      },
-      sign: {
-        type: Sequelize.STRING
-      },
-      icon: {
-        type: Sequelize.STRING
-      },
       merchant: {
-        type: Sequelize.STRING
-      },
-      subCategoryNum: {
         type: Sequelize.STRING
       },
       UserId: {

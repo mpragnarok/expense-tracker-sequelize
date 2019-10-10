@@ -52,6 +52,7 @@
         </div>
 
       </div>
+
       {{#each sumupMonth}}
       {{!-- inflow and outflow --}}
       <div class="card-block my-2">
@@ -88,21 +89,21 @@
 
       <div class="card col-md-12">
         <h5 class="card-header" role="tab" id="headingOne">
-          <div data-toggle="collapse" data-parent="#accordion" href="#collapse{{this.dayOfMonth}}" aria-expanded="true"
-            aria-controls="collapseOne" class="d-block ">
+          <div data-toggle="collapse" data-parent="#accordion" href="#collapse{{getFormattedDay this.date}}"
+            aria-expanded="true" aria-controls="collapseOne" class="d-block ">
             <div class="transaction-header-content row">
               <div class="data-view col-md-9 text-left">
                 <h1 class="view-day float-left mr-2">
-                  {{this.dayOfMonth}}
+                  {{getFormattedDay this.date}}
                 </h1>
                 <span class="view-date row  float-left">
                   <span class="day col-md-12">
-                    {{this.dayOfWeekName}}
+                    {{convertDayOfWeekName this.date}}
                   </span>
 
                   <span class="month col-md-12 text-secondary">
-                    {{this.monthName}}
-                    {{this.year}}
+                    {{convertMonthName this.date}}
+                    {{getFormattedYear this.date}}
                   </span>
                 </span>
               </div>
@@ -116,16 +117,18 @@
         </h5>
 
         {{!-- start of individual transaction --}}
-        <div id="collapse{{this.dayOfMonth}}" class="collapse show row" role="tabpanel" aria-labelledby="headingOne">
+        <div id="collapse{{getFormattedDay this.date}}" class="collapse show row" role="tabpanel"
+          aria-labelledby="headingOne">
           <div class="card-body transactions col-md-12">
             <ul class="list-group">
+
               {{#each this.record}}
               <div class="transaction">
                 <li class="list-group-item border-0">
                   <div class="float-right ml-5">
-                    <form action="/records/{{this._id}}/?_method=DELETE" method="POST">
+                    <form action="/records/{{this.id}}/?_method=DELETE" method="POST">
                       {{!-- edit and delete button --}}
-                      <a href="/records/{{this._id}}/edit" type="button" class="text-secondary" aria-label="Edit">
+                      <a href="/records/{{this.id}}/edit" type="button" class="text-secondary" aria-label="Edit">
                         <span aria-hidden="true"><i class="far fa-edit"></i></span>
                       </a>
                       <button type="submit" class="btn" aria-label="Close">
@@ -136,7 +139,7 @@
                   <div class="transaction-row">
                     <div class=" float-left">
                       <p class="primary-text text-left">
-                        <i class="fas fa-{{this.icon}}"></i>
+                        {{getIcon this.category this.subCategory}}
                         <span class="category-name">{{this.subCategory}}</span>
                       </p>
                       <p class="secondary-text text-secondary float-left">
@@ -148,20 +151,23 @@
                       </p>
                     </div>
                     <div class="float-right">
-                      <span class="amount">{{this.sign}}{{this.amount}} NT</span>
+                      <span class="amount">{{getSign this.category}}{{this.amount}} NT</span>
                     </div>
                   </div>
                 </li>
               </div>
+
               {{/each}}
             </ul>
           </div>
         </div>
 
       </div>
+
       {{!-- end of date transaction --}}
       {{/each}}
       {{else}}
+
       <div class="card col-md-12 my-5">
         <div class="card-header d-flex justify-content-center align-items-center" style="height: 300px;" role="tab"
           id="headingOne">

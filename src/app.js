@@ -1,5 +1,4 @@
 const express = require('express')
-require('./db/mongoose')
 const app = express()
 // check if not in production mode
 if (process.env.NODE_ENV !== 'production') {
