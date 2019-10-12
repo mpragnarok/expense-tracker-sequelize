@@ -1,5 +1,6 @@
 const express = require('express')
 const app = express()
+require('../handelbars-helpers')
 // check if not in production mode
 if (process.env.NODE_ENV !== 'production') {
   require('dotenv').config()

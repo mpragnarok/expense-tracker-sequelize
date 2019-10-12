@@ -10,6 +10,9 @@ module.exports = (sequelize, DataTypes) => {
     User.hasMany(models.Record, {
       foreignKey: 'UserId'
     });
+    // User.hasMany(models.DateRecord, {
+    //   foreignKey: 'UserId'
+    // });
   };
   return User;
 };

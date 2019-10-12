@@ -4,6 +4,7 @@ const express = require('express')
 const router = express.Router()
 const db = require('../../models')
 const Record = db.Record
+const User = db.User
 const { authenticated } = require('../../config/auth')
 // const mongoose = require('mongoose')
 // let ObjectId = mongoose.Types.ObjectId
@@ -39,276 +40,26 @@ router.get('/', authenticated, async (req, res) => {
     })
     console.log(records)
     // TODO:Amount sum By month
-    let sumupMonth =
-      // income
+    // let sumupMonth =
+    // income
 
-      // outcome
+    // outcome
 
-      // Total amount
+    // Total amount
 
-      // TODO: sign of amount
+    // TODO: sign of amount
 
-      // TODO: convert dayOfMonth to Month name
+    // TODO: convert dayOfMonth to Month name
 
-      // TODO: convert dayOfWeek to dayOfWeekName
+    // TODO: convert dayOfWeek to dayOfWeekName
 
-      // TODO: Amount sum by day
+    // TODO: Amount sum by day
 
-      // TODO: list all transactions in same day
-
-
-      // // sum up all the expense and income
-      // let sumupMonth = await Record.aggregate([{
-      //   $match: {
-      //     $and: [{ 'month': month }, { 'year': year },
-      //       { 'userId': new ObjectId(req.user._id) }
-      //     ]
-      //   }
-      // }, {
-      //   $group: {
-      //     _id: {
-      //       month: { $month: "$date" },
-      //       year: { $year: "$date" }
-      //     },
-      //     expense: {
-      //       $sum: {
-      //         $cond: [
-      //           { $eq: ["$category", "expense"] },
-      //           "$amount", 0
-      //         ]
-      //       },
-      //     },
-      //     income: {
-      //       $sum: {
-      //         $cond: [
-      //           { $eq: ["$category", "income"] },
-      //           "$amount", 0
-      //         ]
-      //       }
-      //     }
-      //   }
-      // }, {
-      //   $addFields: {
-      //     expenseString: { $substr: ["$expense", 0, -1] },
-      //     incomeString: { $substr: ["$income", 0, -1] }
-      //   }
-      // }, {
-      //   $project: {
-
-      //     category: "$_id.category",
-      //     expenseWithSign: {
-      //       $concat: ["-", "$expenseString"]
-      //     },
-      //     incomeWithSign: {
-      //       $concat: ["+", "$incomeString"]
-      //     },
-      //     sum: { $subtract: ["$income", "$expense"] }
-      //   }
-      // }])
-
-      // // sumup day balance
+    // TODO: list all transactions in same day
 
 
-      // let sumupDay = await Record.aggregate([{
-      //   $match: {
-      //     $and: [{ 'month': month }, { 'year': year },
-      //       { 'userId': new ObjectId(req.user._id) }
-      //     ]
-      //   }
-      // }, {
-      //   $group: {
-      //     _id: {
-      //       dayOfMonth: { $dayOfMonth: "$date" },
-      //       month: { $month: "$date" },
-      //       year: { $year: "$date" },
-      //       dayOfWeek: { $dayOfWeek: "$date" }
-      //     },
-      //     expense: {
-      //       $sum: {
-      //         $cond: [
-      //           { $eq: ["$category", "expense"] },
-      //           "$amount", 0
-      //         ]
-      //       },
-      //     },
-      //     income: {
-      //       $sum: {
-      //         $cond: [
-      //           { $eq: ["$category", "income"] },
-      //           "$amount", 0
-      //         ]
-      //       }
-      //     },
-      //     record: {
-      //       $push: "$$ROOT"
-      //     },
 
-      //   }
-      // }, {
-      //   $project: {
-      //     sum: { $subtract: ["$income", "$expense"] },
-      //     record: "$record",
-      //     year: '$_id.year',
-      //     month: '$_id.month',
-      //     dayOfMonth: '$_id.dayOfMonth',
-      //     dayOfWeek: '$_id.dayOfWeek'
-      //   }
-      // }, {
-      //   $addFields: {
-      //     monthName: {
-      //       $let: {
-      //         vars: {
-      //           monthsInString: [, 'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
-      //         },
-      //         in: {
-      //           $arrayElemAt: ['$$monthsInString', '$month']
-      //         }
-      //       }
-      //     },
-      //     dayOfWeekName: {
-      //       $let: {
-      //         vars: {
-      //           dayOfWeekInString: [, 'Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
-      //         },
-      //         in: {
-      //           $arrayElemAt: ['$$dayOfWeekInString', '$dayOfWeek']
-      //         }
-      //       }
-      //     }
-      //   }
-      // }, {
-      //   $sort: { "dayOfMonth": 1 }
-      // }])
-
-      // if (subCategoryNum && checkSubCategory(subCategoryNum) === true) {
-
-
-      //   sumupDay = await Record.aggregate([{
-      //     $match: {
-      //       $and: [{ 'month': month }, { 'year': year }, { 'subCategoryNum': subCategoryNum },
-      //         { 'userId': new ObjectId(req.user._id) }
-      //       ]
-      //     }
-      //   }, {
-      //     $group: {
-      //       _id: {
-      //         dayOfMonth: { $dayOfMonth: "$date" },
-      //         month: { $month: "$date" },
-      //         year: { $year: "$date" },
-      //         dayOfWeek: { $dayOfWeek: "$date" }
-      //       },
-      //       expense: {
-      //         $sum: {
-      //           $cond: [
-      //             { $eq: ["$category", "expense"] },
-      //             "$amount", 0
-      //           ]
-      //         },
-      //       },
-      //       income: {
-      //         $sum: {
-      //           $cond: [
-      //             { $eq: ["$category", "income"] },
-      //             "$amount", 0
-      //           ]
-      //         }
-      //       },
-      //       record: {
-      //         $push: "$$ROOT"
-      //       },
-
-      //     }
-      //   }, {
-      //     $project: {
-      //       sum: { $subtract: ["$income", "$expense"] },
-      //       record: "$record",
-      //       year: '$_id.year',
-      //       month: '$_id.month',
-      //       dayOfMonth: '$_id.dayOfMonth',
-      //       dayOfWeek: '$_id.dayOfWeek'
-      //     }
-      //   }, {
-      //     $addFields: {
-      //       monthName: {
-      //         $let: {
-      //           vars: {
-      //             monthsInString: [, 'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
-      //           },
-      //           in: {
-      //             $arrayElemAt: ['$$monthsInString', '$month']
-      //           }
-      //         }
-      //       },
-      //       dayOfWeekName: {
-      //         $let: {
-      //           vars: {
-      //             dayOfWeekInString: [, 'Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
-      //           },
-      //           in: {
-      //             $arrayElemAt: ['$$dayOfWeekInString', '$dayOfWeek']
-      //           }
-      //         }
-      //       }
-      //     }
-      //   }, {
-      //     $sort: { "dayOfMonth": -1 }
-      //   }])
-
-
-      //   sumupMonth = await Record.aggregate([{
-      //     $match: {
-      //       $and: [{ 'month': month }, { 'year': year }, { 'subCategoryNum': subCategoryNum },
-      //         { 'userId': new ObjectId(req.user._id) }
-      //       ]
-      //     }
-      //   }, {
-      //     $group: {
-      //       _id: {
-      //         month: { $month: "$date" },
-      //         year: { $year: "$date" }
-      //       },
-      //       expense: {
-      //         $sum: {
-      //           $cond: [
-      //             { $eq: ["$category", "expense"] },
-      //             "$amount", 0
-      //           ]
-      //         },
-      //       },
-      //       income: {
-      //         $sum: {
-      //           $cond: [
-      //             { $eq: ["$category", "income"] },
-      //             "$amount", 0
-      //           ]
-      //         }
-      //       }
-      //     }
-      //   }, {
-      //     $addFields: {
-      //       expenseString: { $substr: ["$expense", 0, -1] },
-      //       incomeString: { $substr: ["$income", 0, -1] }
-      //     }
-      //   }, {
-      //     $project: {
-
-      //       category: "$_id.category",
-      //       expenseWithSign: {
-      //         $concat: ["-", "$expenseString"]
-      //       },
-      //       incomeWithSign: {
-      //         $concat: ["+", "$incomeString"]
-      //       },
-      //       sum: { $subtract: ["$income", "$expense"] }
-      //     }
-      //   }])
-
-      // }
-
-      // console.log('sumupDay', sumupDay)
-      // console.log('record', sumupDay[1].record)
-
-      res.render('index', { month, year, subCategoryNum, subCategory })
+    res.render('index', { month, year, subCategoryNum, subCategory })
   } catch (e) {
     res.status(500).send(e)
   }
@@ -317,8 +68,6 @@ router.get('/', authenticated, async (req, res) => {
 // create a new transaction in page
 
 router.get('/add', authenticated, async (req, res) => {
-  // const date = new Date()
-  // let [day = (("0" + date.getDate()).slice(-2)), month = ('0' + ((date.getMonth() + 1).toString())).slice(-2), year = date.getFullYear().toString()] = []
   const formattedDate = getFormattedDate()
   try {
     res.render('add', { formattedDate, category: 'Select a category' })
@@ -330,19 +79,9 @@ router.get('/add', authenticated, async (req, res) => {
 // create a new transaction
 router.post('/', authenticated, async (req, res) => {
   let { name, date, subCategoryValue, amount, merchant } = req.body
-  let [category, subCategory, icon, subCategoryNum] = subCategoryValue.split('/')
-  // let sign = '+'
-  // const monthField = month
-  // const dayField = day
-  // month -= 1 //new Date() needs month index
-  // if (dayField === day) {
-  //   day = parseInt(day) + 1
-  // }
+  let [category, subCategory] = subCategoryValue.split('/')
 
-  // console.log(dayField, day)
   amount = Math.abs(parseFloat(amount))
-
-  // if (category === 'expense') sign = '-'
 
   const record = new Record({
     name,
@@ -350,12 +89,12 @@ router.post('/', authenticated, async (req, res) => {
     subCategory,
     category,
     amount,
-    // month: monthField,
-    // year,
-    // day: dayField,
     merchant,
     UserId: req.user.id
   })
+
+
+
   let errors = []
   try {
     if (!name || !date || !subCategoryValue || !amount) {
@@ -363,14 +102,10 @@ router.post('/', authenticated, async (req, res) => {
     }
 
     if (errors.length > 0) {
-      month += 1
       return res.render('add', {
         errors,
         name,
         date,
-        // day,
-        // month,
-        // year,
         subCategoryValue,
         amount,
         merchant
@@ -468,6 +203,7 @@ router.delete('/:id', authenticated, async (req, res) => {
     if (!record) {
       return res.status(404).send()
     }
+    // if that date of record is empty, delete it
     record.remove()
     res.redirect('/')
   } catch (e) {

@@ -1,47 +1,44 @@
 const Handlebars = require('handlebars')
 // TODO: get year
 Handlebars.registerHelper('getFormattedYear', function(date, options) {
-  const year = date.getFullYear()
+  const year = date.split('-')[0]
   return year
 })
 
 // TODO: get month
 Handlebars.registerHelper('getFormattedMonth', function(date, options) {
-  const month = date.getMonth() + 1
+  const month = date.split('-')[1]
   return month
 })
 
-// TODO: get day Of Month
+// get day Of Month
 Handlebars.registerHelper('getFormattedDay', function(date, options) {
-  const dayOfMonth = date.getDate()
+  const dayOfMonth = date.split('-')[2]
   return dayOfMonth
 })
 
-// TODO: Month name in English
+// Month name in English
 
 Handlebars.registerHelper('convertMonthName', function(date, options) {
   const monthNames = ["January", "February", "March", "April", "May", "June",
     "July", "August", "September", "October", "November", "December"
   ]
-  const monthName = monthNames[date.getMonth()]
+  const newDate = new Date(date)
+  const monthName = monthNames[newDate.getMonth()]
   return monthName
 })
 
-// TODO: Day of Week name in English
+// Day of Week name in English
 
 Handlebars.registerHelper('convertDayOfWeekName', function(date, options) {
   const dayOfWeekNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
-  const dayOfWeekName = dayOfWeekNames[date.getDay()]
+  const newDate = new Date(date)
+  const dayOfWeekName = dayOfWeekNames[newDate.getDay()]
   return dayOfWeekName
 })
 
-// TODO: convert date to dayOfMonth
-Handlebars.registerHelper('convertDayOfMonth', function(date, options) {
-  const dayOfMonth = date.getDate()
-  return dayOfMonth
-})
 
-// TODO: Icon
+// get icon from category and subCategory
 Handlebars.registerHelper('getIcon', function(category, subCategory, options) {
   return category === 'expense' && subCategory === 'Home' ? `<i class="fas fa-home text-danger"></i>` :
     category === 'expense' && subCategory === 'Transportation' ? `<i class="fas fa-shuttle-van text-danger"></i>` :
@@ -54,8 +51,45 @@ Handlebars.registerHelper('getIcon', function(category, subCategory, options) {
     category === 'income' && subCategory === 'Selling' ? `<i class="fas fa-donate text-success"></i>` : `<i class="fas fa-comment-dollar text-success"></i>`
 })
 
-// TODO: sign of amount
+// sign of amount
 
 Handlebars.registerHelper('getSign', function(category, options) {
-  return category === 'expense' ? `+` : `-`
+  return category === 'expense' ? `-` : `+`
 })
+
+// sum of day amount
+
+Handlebars.registerHelper('sumDayAmount', function(records, prop, category, options) {
+  const positiveSumAmount = records.reduce((acc, curr) => {
+    if (curr[category] === 'income') {
+      return acc + parseFloat(curr[prop])
+    }
+  }, 0) || 0
+
+
+  const negativeSumAmount = records.reduce((acc, curr) => {
+    if (curr[category] === 'expense') {
+      return acc + parseFloat(curr[prop])
+    }
+  }, 0) || 0
+
+  let sumAmount = positiveSumAmount - negativeSumAmount
+  return sumAmount
+})
+
+// // sign of amount
+
+// Handlebars.registerHelper('sumMonthAmount', function(input, options) {
+//   let [monthAmount, monthIncome, monthExpense] = [0, 0, 0]
+//   input.forEach(record => {
+//     if (record.category === 'income') {
+//       monthIncome += record.amount
+//     } else {
+//       monthExpense += record.amount
+//     }
+//   })
+//   monthAmount = monthIncome - monthExpense
+//   monthExpense = -Math.abs(monthExpense)
+
+//   return [monthIncome, monthExpense, monthAmount]
+// })

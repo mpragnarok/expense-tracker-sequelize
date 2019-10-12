@@ -53,63 +53,63 @@
 
       </div>
 
-      {{#each sumupMonth}}
+      {{#if records}}
       {{!-- inflow and outflow --}}
       <div class="card-block my-2">
 
         <div class="row">
           <div class="inflow col-md-12">
-            <span class="amount income float-right mb-2">{{this.incomeWithSign}}
+            <span class="amount income float-right mb-2">{{monthIncome}}
               NT</span>
             <div class="float-left">Inflow</div>
           </div>
           <div class="outflow col-md-12">
-            <span class="amount expense float-right">{{this.expenseWithSign}}
+            <span class="amount expense float-right">{{monthExpense}}
               NT</span>
             <div class="float-left">Outflow</div>
           </div>
           <div class="total-amount col-md-12 mb-2">
             <hr>
-            <span class="amount float-right"> {{this.sum}} NT</span>
+            <span class="amount float-right"> {{monthAmount}} NT</span>
 
           </div>
         </div>
 
       </div>
       {{!-- inflow and outflow --}}
-      {{/each}}
+
     </div>
     {{!-- all transactions --}}
     <div class="card row " id="accordion" role="tablist" aria-multiselectable="true">
 
-      {{#if sumupDay}}
-      {{#each sumupDay}}
 
+
+      {{#each recordsGroupByDay}}
       {{!-- start of date transaction --}}
 
       <div class="card col-md-12">
         <h5 class="card-header" role="tab" id="headingOne">
-          <div data-toggle="collapse" data-parent="#accordion" href="#collapse{{getFormattedDay this.date}}"
+          <div data-toggle="collapse" data-parent="#accordion" href="#collapse{{getFormattedDay @key}}"
             aria-expanded="true" aria-controls="collapseOne" class="d-block ">
             <div class="transaction-header-content row">
               <div class="data-view col-md-9 text-left">
                 <h1 class="view-day float-left mr-2">
-                  {{getFormattedDay this.date}}
+                  {{getFormattedDay @key}}
                 </h1>
                 <span class="view-date row  float-left">
                   <span class="day col-md-12">
-                    {{convertDayOfWeekName this.date}}
+                    {{convertDayOfWeekName @key}}
                   </span>
 
                   <span class="month col-md-12 text-secondary">
-                    {{convertMonthName this.date}}
-                    {{getFormattedYear this.date}}
+                    {{convertMonthName @key}}
+                    {{getFormattedYear @key}}
                   </span>
                 </span>
               </div>
               <div class="amount-view text-right col-md-3">
                 <span class="amount">
-                  {{this.sum}} NT
+                  {{sumDayAmount this.records 'amount' 'category'}} NT
                 </span>
               </div>
             </div>
@@ -117,12 +117,12 @@
         </h5>
 
         {{!-- start of individual transaction --}}
-        <div id="collapse{{getFormattedDay this.date}}" class="collapse show row" role="tabpanel"
+        <div id="collapse{{getFormattedDay @key}}" class="collapse show row" role="tabpanel"
           aria-labelledby="headingOne">
           <div class="card-body transactions col-md-12">
             <ul class="list-group">
 
-              {{#each this.record}}
+              {{#each this.records}}
               <div class="transaction">
                 <li class="list-group-item border-0">
                   <div class="float-right ml-5">
@@ -139,7 +139,7 @@
                   <div class="transaction-row">
                     <div class=" float-left">
                       <p class="primary-text text-left">
-                        {{getIcon this.category this.subCategory}}
+                        {{#getIcon this.category this.subCategory}}{{/getIcon}}
                         <span class="category-name">{{this.subCategory}}</span>
                       </p>
                       <p class="secondary-text text-secondary float-left">
@@ -167,7 +167,6 @@
       {{!-- end of date transaction --}}
       {{/each}}
       {{else}}
-
       <div class="card col-md-12 my-5">
         <div class="card-header d-flex justify-content-center align-items-center" style="height: 300px;" role="tab"
           id="headingOne">
