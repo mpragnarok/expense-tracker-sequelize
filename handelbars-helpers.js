@@ -1,11 +1,11 @@
 const Handlebars = require('handlebars')
-// TODO: get year
+// get year
 Handlebars.registerHelper('getFormattedYear', function(date, options) {
   const year = date.split('-')[0]
   return year
 })
 
-// TODO: get month
+// get month
 Handlebars.registerHelper('getFormattedMonth', function(date, options) {
   const month = date.split('-')[1]
   return month
@@ -15,6 +15,12 @@ Handlebars.registerHelper('getFormattedMonth', function(date, options) {
 Handlebars.registerHelper('getFormattedDay', function(date, options) {
   const dayOfMonth = date.split('-')[2]
   return dayOfMonth
+})
+// get day Of Month
+Handlebars.registerHelper('getFormattedDate', function(date, options) {
+  const newDate = new Date(date)
+  let [month, day, year] = [newDate.getMonth() + 1, newDate.getDate(), newDate.getFullYear()]
+  return `${month}-${day}-${year}`
 })
 
 // Month name in English
@@ -76,20 +82,3 @@ Handlebars.registerHelper('sumDayAmount', function(records, prop, category, opti
   let sumAmount = positiveSumAmount - negativeSumAmount
   return sumAmount
 })
-
-// // sign of amount
-
-// Handlebars.registerHelper('sumMonthAmount', function(input, options) {
-//   let [monthAmount, monthIncome, monthExpense] = [0, 0, 0]
-//   input.forEach(record => {
-//     if (record.category === 'income') {
-//       monthIncome += record.amount
-//     } else {
-//       monthExpense += record.amount
-//     }
-//   })
-//   monthAmount = monthIncome - monthExpense
-//   monthExpense = -Math.abs(monthExpense)
-
-//   return [monthIncome, monthExpense, monthAmount]
-// })

@@ -1,3 +1,4 @@
+{{>messages}}
 <div class="row my-5">
   <div class="card col-md-8 m-auto p row">
     <div class="card col-md-12 text-center">
@@ -34,18 +35,28 @@
               <a class="dropdown-item disabled" href="#" tabindex="-1" aria-disabled="true">
                 &#128184; EXPENSE
               </a>
-              <a class="dropdown-item" href="/records?subCategoryNum=0&subCategory=Home">Home</a>
-              <a class="dropdown-item" href="/records?subCategoryNum=1&subCategory=Transportation">Transportation</a>
-              <a class="dropdown-item" href="/records?subCategoryNum=2&subCategory=Entertainment">Entertainment</a>
-              <a class="dropdown-item" href="/records?subCategoryNum=3&subCategory=Food">Food &
+              <a class="dropdown-item"
+                href="/records?subCategoryNum=0&subCategory=Home&monthYear={{month}}-{{year}}">Home</a>
+              <a class="dropdown-item"
+                href="/records?subCategoryNum=1&subCategory=Transportation&monthYear={{month}}-{{year}}">Transportation</a>
+              <a class="dropdown-item"
+                href="/records?subCategoryNum=2&subCategory=Entertainment&monthYear={{month}}-{{year}}">Entertainment</a>
+              <a class="dropdown-item"
+                href="/records?subCategoryNum=3&subCategory=Food&monthYear={{month}}-{{year}}">Food &
                 Beverage</a>
-              <a class="dropdown-item" href="/records?subCategoryNum=4&subCategory=Other">Other</a>
+              <a class="dropdown-item"
+                href="/records?subCategoryNum=4&subCategory=Other&monthYear={{month}}-{{year}}">Other</a>
               <a class="dropdown-item disabled" href="#" tabindex="-1" aria-disabled="true">&#128176; INCOME</a>
-              <a class="dropdown-item" href="/records?subCategoryNum=5&subCategory=Gifts">Gifts</a>
-              <a class="dropdown-item" href="/records?subCategoryNum=6&subCategory=Salary">Salary</a>
-              <a class="dropdown-item" href="/records?subCategoryNum=7&subCategory=Interest">Interest</a>
-              <a class="dropdown-item" href="/records?subCategoryNum=8&subCategory=Selling">Selling</a>
-              <a class="dropdown-item" href="/records?subCategoryNum=9&subCategory=Other">Other</a>
+              <a class="dropdown-item"
+                href="/records?subCategoryNum=5&subCategory=Gifts&monthYear={{month}}-{{year}}">Gifts</a>
+              <a class="dropdown-item"
+                href="/records?subCategoryNum=6&subCategory=Salary&monthYear={{month}}-{{year}}">Salary</a>
+              <a class="dropdown-item"
+                href="/records?subCategoryNum=7&subCategory=Interest&monthYear={{month}}-{{year}}">Interest</a>
+              <a class="dropdown-item"
+                href="/records?subCategoryNum=8&subCategory=Selling&monthYear={{month}}-{{year}}">Selling</a>
+              <a class="dropdown-item"
+                href="/records?subCategoryNum=9&subCategory=Other&monthYear={{month}}-{{year}}">Other</a>
             </div>
           </div>
           {{!-- category dropdown--}}

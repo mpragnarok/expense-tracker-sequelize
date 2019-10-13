@@ -1,6 +1,3 @@
-// TODO: 1. DELETE sign, icon, subCategoryNum
-// TODO: DELETE month, day, year
-
 'use strict';
 module.exports = (sequelize, DataTypes) => {
   const Record = sequelize.define('Record', {

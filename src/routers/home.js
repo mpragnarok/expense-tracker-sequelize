@@ -29,19 +29,10 @@ router.get('/', authenticated, async (req, res) => {
         ['date', 'DESC']
       ]
     })
+    // summarize month income, expense and amount
     const [monthIncome, monthExpense, monthAmount] = sumMonthAmount(records).split('/')
 
-    // records.forEach(record => {
-    //   if (record.category === 'income') {
-    //     monthIncome += record.amount
-    //   }
-    //   if (record.category === 'expense') {
-    //     monthExpense += record.amount
-    //   }
-    // })
-    // monthAmount = monthIncome - monthExpense
-    // monthExpense = -Math.abs(monthExpense)
-
+    // records group by day
     const recordsGroupByDay = recordGroupByDay(records, month, year)
 
 

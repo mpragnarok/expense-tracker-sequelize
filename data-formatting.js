@@ -14,16 +14,14 @@ module.exports = {
   recordGroupByDay: (input, month, year) => {
     let recordsGroupByDay = []
     input.forEach(record => {
-      if ((record.date.getMonth() + 1).toString() === month && record.date.getFullYear().toString() === year) {
-        recordsGroupByDay.push({
-          date: record.date,
-          dateFormatted: `${record.date.getFullYear()}-${record.date.getMonth()+1}-${record.date.getDate()-1}`,
-          record: record.dataValues
-        })
-      }
+      recordsGroupByDay.push({
+        date: record.date,
+        dateFormatted: `${record.date.getFullYear()}-${record.date.getMonth()+1}-${record.date.getDate()-1}`,
+        record: record.dataValues
+      })
     })
 
-    return recordsGroupByDay.reduce((result, {
+    recordsGroupByDay = recordsGroupByDay.reduce((result, {
       dateFormatted,
       record
     }) => {
@@ -35,16 +33,20 @@ module.exports = {
       })
       return result
     }, {})
+    // console.log(recordsGroupByDay)
+    return recordsGroupByDay
   },
 
 
   // search date in period
   getSearchMonth: (year, month) => {
     if (!month) { return {} }
+    let thisMonth = new Date(year, month)
+    thisMonth.setMonth(thisMonth.getMonth() - 1)
     let nextMonth = new Date(year, month)
-    nextMonth.setMonth(nextMonth.getMonth() + 1)
     return {
-      [Op.between]: [new Date(month), nextMonth]
+      [Op.gte]: thisMonth,
+      [Op.lt]: nextMonth
     }
   },
 
@@ -60,7 +62,11 @@ module.exports = {
     })
     monthAmount = monthIncome - monthExpense
     console.log(monthExpense)
-    return `+${monthIncome}/-${monthExpense}/=${monthAmount}`
-  }
+    return `+${monthIncome}/-${monthExpense}/${monthAmount}`
+  },
 
+  checkSubCategory: (query) => {
+    let regex = RegExp(/([0-9])$/)
+    return regex.test(query)
+  }
 }

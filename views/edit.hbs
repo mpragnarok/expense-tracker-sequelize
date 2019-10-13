@@ -14,27 +14,27 @@
         <div class="col-md-12 form-group row justify-content-center mb-3 dates">
           <label for="date" class="col-sm-2 col-form-label">Date <span style="color:red"> *</label>
           <input type="text" class="form-control col-md-4" id="date" name="date" id="date" required
-            value="{{record.day}}-{{record.month}}-{{record.year}}">
+            value="{{getFormattedDate record.date}}">
         </div>
 
         <div class="col-md-12 form-group row justify-content-center mb-3">
           <label for="subCategoryValue" class="col-sm-2 col-form-label">Category <span style="color:red">*</label>
           <select class="form-control col-md-4" name="subCategoryValue" required>
-            <option value="{{record.subCategoryValue}}" hidden="hidden" selected="selected">
+            <option value="{{record.category}}/{{record.subCategory}}" hidden="hidden" selected="selected">
               {{record.subCategory}}
             </option>
             <option value="" disabled>&#128184; EXPENSE</option>
-            <option value="expense/Home/home/0">Home</option>
-            <option value="expense/Transportation/shuttle-van/1">Transportation</option>
-            <option value="expense/Entertainment/grin-beam/2">Entertainment</option>
-            <option value="expense/Food & Beverage/utensils/3">Food & Beverage</option>
-            <option value="expense/Other/hand-holding-usd/4">Other</option>
+            <option value="expense/Home">Home</option>
+            <option value="expense/Transportation">Transportation</option>
+            <option value="expense/Entertainment">Entertainment</option>
+            <option value="expense/Food & Beverage">Food & Beverage</option>
+            <option value="expense/Other">Other</option>
             <option value="" disabled>&#128176; INCOME</option>
-            <option value="income/Gifts/gift/5">Gifts</option>
-            <option value="income/Salary/money-check-alt/6">Salary</option>
-            <option value="income/Interest/coins/7">Interest</option>
-            <option value="income/Selling/donate/8">Selling</option>
-            <option value="income/Other/comment-dollar/9">Other</option>
+            <option value="income/Gifts">Gifts</option>
+            <option value="income/Salary">Salary</option>
+            <option value="income/Interest">Interest</option>
+            <option value="income/Selling">Selling</option>
+            <option value="income/Other">Other</option>
           </select>
         </div>
 

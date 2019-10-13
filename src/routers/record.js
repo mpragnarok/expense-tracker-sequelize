@@ -1,72 +1,66 @@
-const { getFormattedDate } = require('../../data-formatting')
-
 const express = require('express')
 const router = express.Router()
 const db = require('../../models')
 const Record = db.Record
-const User = db.User
 const { authenticated } = require('../../config/auth')
-// const mongoose = require('mongoose')
-// let ObjectId = mongoose.Types.ObjectId
+const Sequelize = require('sequelize')
+const Op = Sequelize.Op
+const subCategories = ['Home', 'Transportation', 'Entertainment', 'Food', 'Other', 'Gifts', 'Salary', 'Interest', 'Selling', 'Other']
+const { getFormattedDate, recordGroupByDay, getSearchMonth, sumMonthAmount, checkSubCategory } = require('../../data-formatting')
 
+// import express-validator setting
+const validation = require('../validator')
+const { validationResult } = require('express-validator')
 
 // fetch all records
-router.get('/', authenticated, async (req, res) => {
-  // date formatting
-  const date = new Date()
-  const monthYear = req.query.monthYear
-  let [day = (("0" + date.getDate()).slice(-2)), month = ('0' + ((date.getMonth() + 1).toString())).slice(-2), year = date.getFullYear().toString()] = []
-  // get category
-  // const subCategoryNum = req.query.subCategoryNum
-  const subCategory = req.query.subCategory
-  // check query string
-  let regex = RegExp(/([0-9])$/)
-
-  function checkSubCategory(query) {
-    return regex.test(query)
-  }
-
+router.get('/', authenticated, validation.queryValidator, async (req, res) => {
+  // get req.queries
+  let { subCategory, subCategoryNum, monthYear } = req.query
+  // month day year default value
+  let [month, day, year] = getFormattedDate().split('-')
+  const errorsMessage = validationResult(req)
   try {
-    if (monthYear !== undefined) {
-      month = req.query.monthYear.split('-')[0]
-      year = req.query.monthYear.split('-')[1]
+    // get month year value when user selected
+    if (monthYear)[month, year] = [monthYear.split('-')[0], monthYear.split('-')[1]]
+
+    // query validator errors messages
+    if (!errorsMessage.isEmpty()) {
+      return res.status(422).render('404', {
+        warning: errorsMessage.array()
+      })
     }
-    // find all records
+
+    // fetch the records in default month and year
     const records = await Record.findAll({
-      where: { UserId: req.user.id },
+      where: {
+        date: getSearchMonth(year, month),
+        subCategory: checkSubCategory(subCategoryNum) ? subCategories[subCategoryNum] : {
+          [Op.or]: subCategories
+        },
+        UserId: req.user.id
+      },
       order: [
         ['date', 'DESC']
       ]
     })
-    console.log(records)
-    // TODO:Amount sum By month
-    // let sumupMonth =
-    // income
+    // console.log(records)
+    if (!records || (checkSubCategory(subCategoryNum) === false)) {
+      return res.redirect('/404')
+    }
 
-    // outcome
+    // summarize month income, expense and amount
+    const [monthIncome, monthExpense, monthAmount] = sumMonthAmount(records).split('/')
 
-    // Total amount
+    // records group by day
+    const recordsGroupByDay = recordGroupByDay(records, month, year)
 
-    // TODO: sign of amount
-
-    // TODO: convert dayOfMonth to Month name
-
-    // TODO: convert dayOfWeek to dayOfWeekName
-
-    // TODO: Amount sum by day
-
-    // TODO: list all transactions in same day
-
-
-
-    res.render('index', { month, year, subCategoryNum, subCategory })
+    res.render('index', { month, year, recordsGroupByDay, records, monthIncome, monthExpense, monthAmount, subCategoryNum, subCategory, monthYear })
   } catch (e) {
     res.status(500).send(e)
   }
 })
 
 // create a new transaction in page
-
 router.get('/add', authenticated, async (req, res) => {
   const formattedDate = getFormattedDate()
   try {
@@ -77,11 +71,12 @@ router.get('/add', authenticated, async (req, res) => {
 })
 
 // create a new transaction
-router.post('/', authenticated, async (req, res) => {
+router.post('/', authenticated, validation.validRecord, async (req, res) => {
   let { name, date, subCategoryValue, amount, merchant } = req.body
   let [category, subCategory] = subCategoryValue.split('/')
-
+  const errorsMessage = validationResult(req)
   amount = Math.abs(parseFloat(amount))
+
 
   const record = new Record({
     name,
@@ -93,10 +88,19 @@ router.post('/', authenticated, async (req, res) => {
     UserId: req.user.id
   })
 
-
-
   let errors = []
   try {
+    if (!errorsMessage.isEmpty()) {
+      return res.render('add', {
+        warning: errorsMessage.array(),
+        name,
+        date,
+        subCategory,
+        category,
+        amount,
+        merchant,
+      })
+    }
     if (!name || !date || !subCategoryValue || !amount) {
       errors.push({ message: 'All fields are required' })
     }
@@ -133,64 +137,55 @@ router.get('/:id/edit', authenticated, async (req, res) => {
 })
 
 // update a transaction
-router.put('/:id', authenticated, async (req, res) => {
+router.put('/:id', authenticated, validation.validRecord, async (req, res) => {
 
-
+  const errorsMessage = validationResult(req)
   let errors = []
   const record = await Record.findOne({ where: { id: req.params.id, UserId: req.user.id } })
 
   let { name, date, subCategoryValue, amount, merchant } = req.body
   let [month, day, year] = date.split('-')
-  let [category, subCategory, icon, subCategoryNum] = subCategoryValue.split('/')
-  let sign = '+'
+  let [category, subCategory] = subCategoryValue.split('/')
 
   try {
+    if (!errorsMessage.isEmpty()) {
+      return res.render('edit', {
+        warning: errorsMessage.array(),
+        name,
+        date,
+        subCategory,
+        category,
+        amount,
+        merchant,
+      })
+    }
     if (!name || !date || !subCategoryValue || !amount) {
       errors.push({ message: 'All fields are required' })
     }
 
     if (errors.length > 0) {
-      month += 1
-      return res.render('add', {
+      return res.render('edit', {
         errors,
         name,
         date,
-        subCategoryValue,
+        category,
         subCategory,
         amount,
         merchant
       })
     }
 
-
-
-    const monthField = month
-    const dayField = day
-    month -= 1 //new Date() needs month index
-    if (dayField === day) {
-      day = parseInt(day) + 1
-    }
     amount = Math.abs(parseFloat(amount))
 
-
     record.name = name
-    record.date = date
+    record.date = getFormattedDate(date)
     record.subCategory = subCategory
     record.category = category
-    // record.sign = sign
-    // record.icon = icon
     record.amount = amount
-    // record.month = monthField
-    // record.year = year
-    // record.day = dayField
     record.merchant = merchant
-
-    // if (category === 'expense') sign = '-'
 
     await record.save()
     res.redirect('/')
-
-
 
   } catch (e) {
     res.status(400).send(e)
@@ -199,12 +194,10 @@ router.put('/:id', authenticated, async (req, res) => {
 // delete a transaction
 router.delete('/:id', authenticated, async (req, res) => {
   try {
-    const record = await Record.findOne({ where: { id: req.params.id, UserId: req.user.id } })
+    const record = await Record.destroy({ where: { id: req.params.id, UserId: req.user.id } })
     if (!record) {
       return res.status(404).send()
     }
-    // if that date of record is empty, delete it
-    record.remove()
     res.redirect('/')
   } catch (e) {
     res.status(500).send(e)

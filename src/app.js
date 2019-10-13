@@ -27,6 +27,8 @@ app.set('view engine', hbs.extname)
 // import body-parser
 app.use(bodyParser.urlencoded({ extended: true }))
 
+
+
 // setup method-override
 app.use(methodOverride('_method'))
 
@@ -56,6 +58,7 @@ app.use((req, res, next) => {
 
 
 
+
 // static files
 app.use(express.static("public"))
 
@@ -64,7 +67,7 @@ app.use('/records', require('./routers/record'))
 app.use('/', require('./routers/home'))
 app.use('/users', require('./routers/user'))
 app.use('/auth', require('./routers/auths'))
-
+app.use('/404', require('./routers/404'))
 
 
 // set up listening on Express server

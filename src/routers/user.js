@@ -4,6 +4,10 @@ const passport = require('passport')
 const bcrypt = require('bcryptjs')
 const db = require('../../models')
 const User = db.User
+// import express-validator setting
+const validation = require('../validator')
+const { validationResult } = require('express-validator')
+
 
 // show login page
 router.get('/login', async (req, res) => {
@@ -40,17 +44,24 @@ router.get('/register', async (req, res) => {
 
 
 // register authentication
-router.post('/register', async (req, res) => {
+router.post('/register', validation.registerUser, async (req, res) => {
   const { name, email, password, password2 } = req.body
+  const errorsMessage = validationResult(req)
   try {
+    // query validator errors messages
+    if (!errorsMessage.isEmpty()) {
+      return res.render('register', {
+        warning: errorsMessage.array(),
+        name,
+        email,
+        password,
+        password2
+      })
+    }
 
     let errors = []
     if (!email || !password || !password2) {
       errors.push({ message: 'All fields are required' })
-    }
-
-    if (password !== password2) {
-      errors.push({ message: 'Passwords are not the same' })
     }
 
     if (errors.length > 0) {
@@ -83,7 +94,9 @@ router.post('/register', async (req, res) => {
             password: hash
           })
         await newUser.save()
-        res.redirect('/')
+        res.redirect('/', {
+          email
+        })
       }
     }
 
